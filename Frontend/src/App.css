@@ -1,0 +1,45 @@
+body{
+   /* background-image: url('./assets/bgpprint.jpg'); */
+  background-repeat: no-repeat;
+  background-size: cover; 
+  /* background-color: lightblue; */
+}
+
+
+.Home-container{
+  text-align: center;
+  /* background-image: url('./assets/bgpprint.jpg'); */
+  background-repeat: no-repeat;
+  background-size:cover;
+  border-radius: 25px;
+  height: 350px;
+  margin-right: 150px;
+  margin-left: 150px;
+  margin-top: 20%;
+ 
+  
+}
+.text{
+  /* background: dimgray; */
+  font-size: large;
+  color: blue;
+}
+.buttonContainer{
+  padding: 20px;
+  margin-top: 22%;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 20px;
+}
+.login-container{
+  width: 505px;
+  padding: 20px;
+}
+.register-container{
+  width: 100%;
+  padding: 20px;
+}
+.justify-content-md-center{
+  width: 600px;
+}
