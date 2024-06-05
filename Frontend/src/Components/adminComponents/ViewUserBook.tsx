@@ -84,7 +84,7 @@ const ViewUserBook: React.FC = () => {
         throw new Error("No token found");
       }
 
-      await api.put(`/admin/updateub/${selectedUserBook.UBID}`, formData, {
+      await api.patch(`/admin/updateUB/${selectedUserBook.UBID}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -162,7 +162,7 @@ const ViewUserBook: React.FC = () => {
               <label>
                 Start Date:
                 <input
-                  type="date"
+                  type="text"
                   name="startdate"
                   value={formData.startdate}
                   onChange={handleFormChange}
@@ -172,7 +172,7 @@ const ViewUserBook: React.FC = () => {
               <label>
                 End Date:
                 <input
-                  type="date"
+                  type="text"
                   name="enddate"
                   value={formData.enddate}
                   onChange={handleFormChange}
