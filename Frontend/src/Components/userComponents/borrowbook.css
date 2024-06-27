@@ -24,7 +24,7 @@ input[type="date"] {
 
 button {
   padding: 10px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   cursor: pointer;
@@ -32,4 +32,35 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+@media (max-width: 768px) {
+  form {
+    padding: 15px;
+  }
+
+  input {
+    padding: 6px;
+    font-size: 0.9em;
+  }
+
+  button {
+    padding: 8px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  form {
+    padding: 10px;
+  }
+
+  input {
+    padding: 5px;
+    font-size: 0.8em;
+  }
+
+  button {
+    padding: 7px;
+    font-size: 0.8em;
+  }
 }

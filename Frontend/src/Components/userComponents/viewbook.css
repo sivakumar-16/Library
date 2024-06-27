@@ -11,7 +11,7 @@
 }
 
 .action-button {
-  background-color: #4CAF50; /* Green */
+  background-color: #4caf50;
   border: none;
   color: white;
   padding: 10px 20px;
@@ -59,15 +59,52 @@
 }
 
 .add-book-button {
-  background-color: #4CAF50; /* Green */
+  background-color: #4caf50;
   border: none;
   color: white;
-  padding: 5px 10px; /* Adjusted padding to fit better in table cells */
+  padding: 5px 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 14px; /* Adjusted font size */
-  margin: 2px 1px; /* Adjusted margin */
+  font-size: 14px;
+  margin: 2px 1px;
   cursor: pointer;
   border-radius: 4px;
+}
+@media (max-width: 768px) {
+  .styled-table th,
+  .styled-table td {
+    padding: 8px 10px;
+  }
+
+  .styled-table th {
+    font-size: 0.8em;
+  }
+
+  .styled-table td {
+    font-size: 0.8em;
+  }
+
+  .add-book-button {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .styled-table th,
+  .styled-table td {
+    padding: 6px 8px;
+  }
+
+  .styled-table th {
+    font-size: 0.7em;
+  }
+
+  .styled-table td {
+    font-size: 0.7em;
+  }
+
+  .add-book-button {
+    padding: 5px 10px;
+  }
 }

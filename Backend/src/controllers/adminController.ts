@@ -40,6 +40,10 @@ export const showbook = async (req: Request, res: Response) => {
     const bookRepository = AppDataSource.getRepository(Book);
     try {
       const { bookname } = req.body;
+      const existingBook = await bookRepository.findOneBy({ bookname });
+      if (existingBook) {
+        return res.status(409).json({ message: 'Book already exists' });
+      }
       const newBook = bookRepository.create({bookname:bookname}); 
        await bookRepository.save(newBook);
       console.log("Record added successfully");
@@ -75,7 +79,9 @@ export const showbook = async (req: Request, res: Response) => {
 export const getUserBooks = async (req: Request, res: Response) => {
   const userBookRepo = AppDataSource.getRepository(UserBook);
     try {
-      const userBooks = await userBookRepo.find();
+      const userBooks = await userBookRepo.find({
+        relations:['username', 'bookname']
+      });
       return res.status(200).json(userBooks);
     } catch (error) {
       console.error(error);
@@ -119,12 +125,12 @@ export const deleteUB = async (req: Request, res: Response) => {
           .status(400)
           .json({ message: "Invalid UBID. It must be an integer." });
       }
-      if (!validateData(update)) {
-        return res.status(400).json({
-          message:
-            "Invalid update data. Ensure all fields are correctly formatted.",
-        });
-      }
+      // if (!validateData(update)) {
+      //   return res.status(400).json({
+      //     message:
+      //       "Invalid update data. Ensure all fields are correctly formatted.",
+      //   });
+      // }
   
       const userRepo = AppDataSource.getRepository(UserBook);
       const userBook = await userRepo.findOneBy({ UBID: UBID });

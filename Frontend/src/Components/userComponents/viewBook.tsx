@@ -1,44 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './viewbook.css';
-import { useNavigate } from 'react-router-dom';
-
-
+import React, { useEffect, useState } from "react";
+import "./viewbook.css";
+import { useNavigate } from "react-router-dom";
+import api from "../../api/Api";
 
 const Viewbook: React.FC = () => {
-  const navigate = useNavigate()
-  const [state, setState] = useState<{ BookId: number, BookName: string }[]>([]);
-
-  const BorrowBook = () => {
-    navigate('/borrow')
-  };
+  const navigate = useNavigate();
+  const [state, setState] = useState<{ BookId: number; BookName: string }[]>(
+    []
+  );
 
   const viewMyBooks = () => {
-    navigate('/borrowedbooks')
-
+    navigate("/borrowedbooks");
   };
 
   const logout = () => {
-    navigate('/')
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const token = localStorage.getItem('token');
-        console.log('token:', token);
+        const token = localStorage.getItem("token");
+        console.log("token:", token);
         if (!token) {
-          throw new Error('No token found');
+          throw new Error("No token found");
         }
 
-        const response = await axios.get('http://localhost:9082/user/books', {
+        const response = await api.get("/user/books", {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
-        setState(response.data);  
+        setState(response.data);
       } catch (error) {
-        console.error('Error fetching books:', error);
+        console.error("Error fetching books:", error);
       }
     };
 
@@ -48,17 +44,25 @@ const Viewbook: React.FC = () => {
   return (
     <div className="container">
       <div className="top-buttons">
-        <button className="action-button" onClick={viewMyBooks}>View My Books</button>
-        <button className="action-button" onClick={logout}>Logout</button>
+        <button className="action-button" onClick={viewMyBooks}>
+          View My Books
+        </button>
+        <button
+          className="action-button"
+          style={{ backgroundColor: "red" }}
+          onClick={logout}
+        >
+          Logout
+        </button>
       </div>
       <div className="table-container">
+        <h1>Book Table</h1>
         <table className="styled-table">
           <thead>
             <tr key="header">
-              {state.length > 0 && Object.keys(state[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
-              <th>Actions</th> {/* Add a header for the actions column */}
+              {state.length > 0 &&
+                Object.keys(state[0]).map((key) => <th key={key}>{key}</th>)}
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -68,8 +72,13 @@ const Viewbook: React.FC = () => {
                   <td key={idx}>{val}</td>
                 ))}
                 <td>
-                  <button className="add-book-button" onClick={() => BorrowBook()}>Borrow Book</button>
-                </td> {/* Add the button in each row */}
+                  <button
+                    className="add-book-button"
+                    onClick={() => navigate(`/borrow/${item.BookId}`)}
+                  >
+                    Borrow Book
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

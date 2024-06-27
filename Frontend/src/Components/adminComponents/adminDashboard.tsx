@@ -1,77 +1,120 @@
-import { Link } from 'react-router-dom'; // If you're using React Router for navigation
-import './AdminDashboard.css'; // Import your CSS file for styling
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { Link, useNavigate } from "react-router-dom";
+import "./AdminDashboard.css";
+import React, { useEffect, useState } from "react";
+import api from "../../api/Api";
 
-
-interface UserBook {
-  UBID: number;
-  username: string; // Assuming username is a string
-  bookname: string; // Assuming bookname is a string
-  startdate: string;
-  enddate: string;
+export interface Book {
+  ID: number;
+  bookname: string;
 }
 
+const AdminDashboard: React.FC = () => {
+  const [books, setBooks] = useState<Book[]>([]);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("token:", token);
+        if (!token) {
+          throw new Error("No token found");
+        }
 
-
-const AdminDashboard:React.FC = () => {
-
-  const [userBooks, setUserBooks] = useState<UserBook[]>([]);
-useEffect(() => {
-  const fetchUserBooks = async () => {
-    try {
-      const response = await axios.get('http://localhost:9082/admin/userbooks');
-        setUserBooks(response.data);
+        const response = await api.get("/user/books", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setBooks(response.data);
       } catch (error) {
-        console.error('Error fetching user books:', error);
+        console.error("Error fetching books:", error);
       }
     };
-    
-    fetchUserBooks();
-  }, []);
-  
-  const deleteBook = ()=>{
 
-  }
-  
+    fetchBooks();
+  }, []);
+
+  const handleDeleteBook = async (id: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this book?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      console.log("token:", token);
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      await api.delete(`/admin/deletebook/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setBooks((prevBooks) => prevBooks.filter((book) => book.ID !== id));
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
+  };
+  const Logout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   return (
     <div className="admin-dashboard-container">
-      <h2>Admin Dashboard</h2>
+      <h2 style={{ textAlign: "center" }}>Admin Dashboard</h2>
       <div className="admin-buttons">
-        <Link to="/addbook" className="admin-button">Create Book</Link>
-        <Link to="/viewusers" className="admin-button">View Users</Link>
-        <Link to="/viewusers" className="admin-button">View UserBooks</Link>
-
-        <Link to="/update" className="admin-button">Update</Link>
+        <Link to="/addbook" className="admin-button">
+          Create Book
+        </Link>
+        <Link to="/viewusers" className="admin-button">
+          View Users
+        </Link>
+        <Link to="/userbook" className="admin-button">
+          View UserBooks
+        </Link>
+        <button
+          className="action-button"
+          style={{ backgroundColor: "red" }}
+          onClick={() => {
+            Logout();
+          }}
+        >
+          Logout
+        </button>
       </div>
       <div className="table-container">
-      <h3>User Books</h3>
-      <table className="styled-table">
-        <thead>
-          <tr>
-            <th>UBID</th>
-            <th>Username</th>
-            <th>Book Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userBooks.map((userBook) => (
-            <tr key={userBook.UBID}>
-              <td>{userBook.UBID}</td>
-              <td>{userBook.username}</td>
-              <td>{userBook.bookname}</td>
-              <td>{userBook.startdate}</td>
-              <td>{userBook.enddate}</td>
-              <td><button style={{borderRadius:'5px',backgroundColor:'red'}} onClick={deleteBook}>del</button></td>
-
+        <h1>Book Table</h1>
+        <table className="styled-table">
+          <thead>
+            <tr key="header">
+              {books.length > 0 &&
+                Object.keys(books[0]).map((key) => <th key={key}>{key}</th>)}
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {books.map((item) => (
+              <tr key={item.ID}>
+                {Object.values(item).map((val, idx) => (
+                  <td key={idx}>{val}</td>
+                ))}
+                <td>
+                  <button
+                    className="add-book-button"
+                    onClick={() => handleDeleteBook(item.ID)}
+                    style={{ backgroundColor: "red" }}
+                  >
+                    Delete book
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

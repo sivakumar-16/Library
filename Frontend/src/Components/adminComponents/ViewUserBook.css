@@ -1,0 +1,56 @@
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
+.popup-inner {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  padding: 15px;
+}
+@media (max-width: 768px) {
+  .styled-table th,
+  .styled-table td {
+    padding: 8px 10px;
+  }
+
+  .styled-table th {
+    font-size: 0.8em;
+  }
+
+  .styled-table td {
+    font-size: 0.8em;
+  }
+
+  .add-book-button {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .styled-table th,
+  .styled-table td {
+    padding: 6px 8px;
+  }
+
+  .styled-table th {
+    font-size: 0.7em;
+  }
+
+  .styled-table td {
+    font-size: 0.7em;
+  }
+
+  .add-book-button {
+    padding: 5px 10px;
+  }
+}

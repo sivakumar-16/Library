@@ -1,29 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './ViewUser.css'
+import React, { useEffect, useState } from "react";
+import "./ViewUser.css";
+import api from "../../api/Api";
+
+export interface User {
+  ID: number;
+  username: string;
+  role: string;
+}
 
 const ViewUser: React.FC = () => {
-  const [users, setUsers] = useState<any[]>([]); // Assuming the user data structure
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token');
-        console.log('token:', token);
+        const token = localStorage.getItem("token");
+        console.log("token:", token);
         if (!token) {
-          throw new Error('No token found');
+          throw new Error("No token found");
         }
-        const response = await axios.get(
-            'http://localhost:9082/admin/viewuser',
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-            }
-          );
+        const response = await api.get("/admin/viewuser", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setUsers(response.data);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
       }
     };
 
@@ -31,21 +34,20 @@ const ViewUser: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <h2>User List</h2>
       <table>
         <thead>
           <tr>
-          <th>Id</th>
+            <th>Id</th>
             <th>Username</th>
-            <th>password</th>
-            {/* Add other user fields as needed */}
+            <th>Role</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id}>
-                <td>{user.id}</td>
+            <tr key={user.ID}>
+              <td>{user.ID}</td>
               <td>{user.username}</td>
               <td>{user.role}</td>
             </tr>

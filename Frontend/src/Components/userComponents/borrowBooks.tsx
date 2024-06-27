@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import './borrowedbook.css'
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "./borrowbook.css";
+import api from "../../api/Api";
 
 const BorrowBook: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [startdate, setStartdate] = useState('');
-  const [enddate, setEnddate] = useState('');
-  const [bookname, setBookname] = useState('');
+  const [username, setUsername] = useState("");
+  const [startdate, setStartdate] = useState("");
+  const [enddate, setEnddate] = useState("");
+  const [bookname, setBookname] = useState("");
   const navigate = useNavigate();
 
-  const borrowBook = async () => {
+  const borrowBook = async (event: React.FormEvent) => {
+    event.preventDefault();
+
     try {
       const requestData = {
         username,
@@ -19,29 +22,31 @@ const BorrowBook: React.FC = () => {
         enddate,
       };
 
-      const token = localStorage.getItem('token');
-      console.log('token:', token);
+      const token = localStorage.getItem("token");
+      console.log("token:", token);
       if (!token) {
-        throw new Error('No token found');
+        throw new Error("No token found");
       }
-      const response = await axios.post(
-          'http://localhost:9082/user/borrow',requestData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
+
+      const response = await api.post("/user/borrow", requestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.status === 201) {
-        alert('Book borrowed successfully');
-        navigate('/viewbook'); // Navigate back to the viewbook page after borrowing
+        alert("Book borrowed successfully");
+        navigate("/viewbook");
       } else {
-        alert('Failed to borrow book');
+        alert("Failed to borrow book");
       }
-    } catch (error) {
-      console.error('Error borrowing book:', error);
-      alert('Error borrowing book');
+    } catch (error: any) {
+      console.error("Error borrowing book:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        alert(`Error borrowing book: ${error.response.data.message}`);
+      } else {
+        alert("Error borrowing book");
+      }
     }
   };
 
@@ -61,17 +66,17 @@ const BorrowBook: React.FC = () => {
         <label>
           Bookname:
           <input
+            defaultValue={""}
             type="text"
             value={bookname}
             onChange={(e) => setBookname(e.target.value)}
             required
-
           />
         </label>
         <label>
           Start Date:
           <input
-            type="date"
+            type="text"
             value={startdate}
             onChange={(e) => setStartdate(e.target.value)}
             required
@@ -80,7 +85,7 @@ const BorrowBook: React.FC = () => {
         <label>
           End Date:
           <input
-            type="date"
+            type="text"
             value={enddate}
             onChange={(e) => setEnddate(e.target.value)}
             required
